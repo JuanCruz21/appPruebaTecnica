@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mov_front:
+    image: mov_front:latest
+    container_name: mov_front
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - "80:80"
+    environment:
+      - VIRTUAL_HOST=ruzdev.online
+      # - LETSENCRYPT_HOST=ruzdev.online
+      # - LETSENCRYPT_EMAIL=juancruz.02.2001@gmail.com
+    networks:
+      - network_ruzdev
+
+  mov_api:
+    image: mov_api:latest
+    container_name: mov_api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./api/storage:/app/storage
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=api.ruzdev.online
+      # - LETSENCRYPT_HOST=api.ruzdev.online
+      # - LETSENCRYPT_EMAIL=juancruz.02.2001@gmail.com
+    networks:
+      - network_ruzdev
+
+networks:
+  network_ruzdev:
+    external: true
