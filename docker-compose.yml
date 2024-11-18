@@ -27,7 +27,7 @@ services:
     volumes:
       - ./api/storage:/app/storage
     expose:
-      - "8000:80"
+      - "80"
     environment:
       - VIRTUAL_HOST=api.ruzdev.online
       # - LETSENCRYPT_HOST=api.ruzdev.online
