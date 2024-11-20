@@ -1,0 +1,1 @@
+export {default as Home} from '../../../app/(tabs)/movies/home.jsx'
