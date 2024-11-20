@@ -12,7 +12,7 @@ export interface AuthState {
     user?: User | null,
 
     login: (email: string, password: string) => Promise<boolean>,
-    register: (name: string, email: string, password: string,confirm_password:string) => Promise<void>,
+    register: (name: string, email: string, password: string,confirm_password:string) => Promise<boolean>,
     checkStatus: () => Promise<void>,
     logout: () => Promise<void>,
 
@@ -50,12 +50,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
          return false;
       }
    },
-   register: async(name: string, email: string, password: string,confirm_password:string) => {
+   register: async(name: string, email: string, password: string,password_confirmation:string) => {
    try{
-      const resp = await authRegister(name,email, password,confirm_password);
+      const resp = await authRegister(name,email, password,password_confirmation);
       get().changeStatus(resp?.token, resp?.user);
+      return true;
    }catch(error){
       console.log(error);
+      return false;
    }
    },
    checkStatus: async () => {

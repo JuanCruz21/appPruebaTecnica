@@ -34,12 +34,12 @@ export const authLogin = async (email: string, password: string) => {
     }
 }
 
-export const authRegister = async (name: string, email: string, password: string,confirm_password:string) => {
+export const authRegister = async (name: string, email: string, password: string,password_confirmation:string) => {
     try {
-        const response = await Api.post('/auth/register', { name, email, password,confirm_password });
+        const response = await Api.post('/Auth/register', { name, email, password,password_confirmation });
         const data = response.data;
-        if (response.status !== 201) {
-            throw new Error(data.message);
+        if (response.status !== 200) {
+            throw new Error(data);
         }
         return returnUserToken(data);
     } catch (error) {

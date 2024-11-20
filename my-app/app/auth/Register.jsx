@@ -11,20 +11,42 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../../src/presentation/auth/store/useAuthStore';
 import { router } from 'expo-router';
+import ToastManager, { Toast } from "toastify-react-native";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirm_password, setConfirmPassword] = useState('');
+  const [password_confirmation, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const {register} = useAuthStore();
+
   const handleRegister = async () => {
-    try{setIsLoading(true);
-        register(email, password,confirm_password,name);
+    try{
+        setIsLoading(true);
+        if (!email || !password || !password_confirmation || !name) {
+            Toast.warn('Por favor, completa todos los campos.');
+            setIsLoading(false);
+            return;
+        }
+        if (password !== password_confirmation) {
+            Toast.warn('Las contraseñas no coinciden.');    
+            setIsLoading(false);
+            return;
+        }
+        const resp = await register(name,email, password,password_confirmation);
+        if (resp) {
+            Toast.success('Se ha creado el ususario correctamente')
+            router.push('(tabs)/movies/home')
+            setIsLoading(false);
+        }
+        if (!resp) {
+            Toast.error('El usuario ya existe')
+            setIsLoading(false);
+        }
         setIsLoading(false);
     }catch(error){
-        console.log('Error al iniciar sesión:', error);
+        Toast.error('Ha ocurrido un error al crear el usuario')
         setIsLoading(false);
     }
   };
@@ -75,7 +97,7 @@ export default function LoginScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="••••••••"
-                value={confirm_password}
+                value={password_confirmation}
                 onChangeText={setConfirmPassword}
                 secureTextEntry
               />
@@ -90,6 +112,7 @@ export default function LoginScreen() {
               <Text style={{textAlign: 'center', color: '#007AFF', fontSize: 16, fontWeight: '600'}}>Volver</Text>
             </TouchableOpacity>
           </View>
+          <ToastManager />
         </ScrollView>
     </View>
   );
