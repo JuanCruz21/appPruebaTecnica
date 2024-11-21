@@ -5,7 +5,7 @@ export default function TabsLayout() {
   return (
     <Tabs>
       <Tabs.Screen
-        name="movies/home"
+        name="content/Home"
         options={{
           headerTitle:"Multimedia",
           tabBarLabel: "Multimedia",

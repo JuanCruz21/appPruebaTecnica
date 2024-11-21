@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../../src/presentation/auth/store/useAuthStore';
 import { router } from 'expo-router';
-import { Toast } from 'toastify-react-native';
+import ToastManager, { Toast } from "toastify-react-native";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -24,14 +24,16 @@ export default function LoginScreen() {
       setIsLoading(true);
       if (!email && !password) {
         Toast.warn('Por favor, ingresa tu correo electrónico y contraseña.');
+        setIsLoading(false);
         return
       }
       const resp = await login(email, password);
       if (resp) {
-        router.push('(tabs)/movies/home');
+        router.replace('(tabs)/content/Home');
       } else {
          Toast.error('Credenciales inválidas. Por favor, verifica tu correo electrónico y contraseña.');
       }
+      setIsLoading(false);
     }catch(error){
       console.log('Error al iniciar sesión:', error);
       setIsLoading(false);
@@ -39,6 +41,7 @@ export default function LoginScreen() {
   };
   return (
     <View style={styles.container}>
+      <ToastManager />
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.card}>
             <Image

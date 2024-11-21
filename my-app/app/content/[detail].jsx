@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <View>
       <Text style={{ textAlign: 'center', fontSize: 20, marginTop: 20, fontWeight: 'bold'}}>
-        Bienvenido
+        Bienvenido al detalle
       </Text>
     </View>
   )

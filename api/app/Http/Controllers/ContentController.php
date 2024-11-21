@@ -30,8 +30,19 @@ class ContentController extends Controller
      */
     public function store(StoreContentRequest $request)
     {
-        $content = Content::create($request->validated() + ['user_id' => auth()->id()]);
-        return response()->json($content, 201);
+        $filePath = null;
+        if ($request->hasFile('urldata')) {
+            $file = $request->file('urldata');
+            $filePath = $file->store('uploads', 'public');
+        }
+        if ($filePath !== null) {
+            $content = Content::create($request->validated() + [
+                'user_id' => auth()->id(),
+                'urldata' => $filePath ?? 'No has subido imagen',
+            ]);
+            return response()->json($content, 201);
+        }
+        return response()->json(['message' => 'File upload failed'], 500);
     }
 
     /**

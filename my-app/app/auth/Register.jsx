@@ -37,7 +37,7 @@ export default function LoginScreen() {
         const resp = await register(name,email, password,password_confirmation);
         if (resp) {
             Toast.success('Se ha creado el ususario correctamente')
-            router.push('(tabs)/movies/home')
+            router.replace('(tabs)/content/Home')
             setIsLoading(false);
         }
         if (!resp) {
@@ -59,7 +59,6 @@ export default function LoginScreen() {
             style={styles.logo}
             />
             <Text style={styles.subtitle}>Gestión de Contenidos Multimedia</Text>
-            
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Correo electrónico</Text>
               <TextInput

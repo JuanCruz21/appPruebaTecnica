@@ -23,8 +23,7 @@ class StoreContentRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'urldata' => 'required|string|mimes:jpeg,png,jpg,gif,mp4,mov,avi,wmv,flv,3gp,mkv,webm|max:2048',
+            'description' => 'required|string',
         ];
     }
 }

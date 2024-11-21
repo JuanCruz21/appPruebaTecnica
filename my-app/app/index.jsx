@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect,Stack } from 'expo-router';
 import { useAuthStore } from '../src/presentation/auth/store/useAuthStore';
 import { useEffect } from 'react';
 import { View, Image, ActivityIndicator, Text } from 'react-native';
@@ -21,18 +21,17 @@ export default function Index() {
             </View>
         );
     }
-
     if (status === 'authenticated') {
-        return <Redirect href="(tabs)/movies/home" />;
-    }
+        return <Redirect href="/(tabs)/content/Home" />;
+        }
 
     if (status === 'not-authenticated') {
         return <Redirect href="/auth/Login" />;
     }
 
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Error inesperado. Por favor, intente nuevamente.</Text>
-        </View>
+        <Stack>
+            <Stack.Screen name="(tabs)" />
+        </Stack>
     );
 }

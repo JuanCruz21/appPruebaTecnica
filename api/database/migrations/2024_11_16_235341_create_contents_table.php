@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('urldata');
-            $table->text('description');
+            $table->string('urldata')->nullable();
+            $table->text('description')->nullable();
             $table->foreignIdFor(\App\Models\User::class);
             $table->foreignIdFor(\App\Models\Category::class);
             $table->timestamps();

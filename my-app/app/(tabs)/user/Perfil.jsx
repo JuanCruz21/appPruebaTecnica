@@ -4,11 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router';
 export default function Perfil() {
-  const { logout } = useAuthStore();
+  const { logout,user } = useAuthStore();
   const handleLogout = async () => {
     try{
       await logout();
-      router.push('/');
+      router.replace('/');
     }catch(error){
       console.error(error)
     }
@@ -16,11 +16,14 @@ export default function Perfil() {
   return (
     <View style={{flex:1, justifyContent:'flex-start'}}>
       <Text style={{ textAlign: 'center', fontSize: 20, marginTop: 20, fontWeight: 'bold', color: "#000"}}>
-        Perfil
+        Bienvenido a su Perfil
       </Text>
       <View style={{justifyContent:'center', alignItems:'center', padding:20}}>
         <Ionicons name='person' size={50} color="black" />
       </View>
+      <Text style={{alignContent:'center', fontSize:20, textAlign:'center'}}>
+        {user?.name}
+      </Text>
       <TouchableOpacity
         style={{
           backgroundColor: '#000',
