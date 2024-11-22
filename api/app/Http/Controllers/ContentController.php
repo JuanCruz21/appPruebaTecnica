@@ -31,11 +31,20 @@ class ContentController extends Controller
     public function store(StoreContentRequest $request)
     {
         $filePath = null;
-        // dd($request->hasFile('urldata'));
-        if ($request->hasAny('urldata')) {
-            $file = $request->file('urldata');
-            $filePath = $file->store('uploads', 'public');
-            $filePath = Storage::url($filePath);
+
+        // Verificar si urldata es un archivo
+        if ($request->has('urldata')) {
+            $urldata = $request->input('urldata');
+
+            // Si es un string (ejemplo: una URL o base64), no intentar procesarlo como archivo
+            if (is_string($urldata)) {
+                $filePath = $urldata; // Guardamos el string directamente
+            } elseif ($request->hasFile('urldata')) {
+                // Si es un archivo, procesarlo y almacenarlo
+                $file = $request->file('urldata');
+                $filePath = $file->store('uploads', 'public');
+                $filePath = Storage::url($filePath);
+            }
         }
 
         $content = Content::create([
@@ -43,7 +52,7 @@ class ContentController extends Controller
             'description' => $request->input('description'),
             'category_id' => $request->input('category_id'),
             'user_id' => auth()->id(),
-            'urldata' => $filePath,
+            'urldata' => $filePath??'Sin imagen',
         ]);
 
         return response()->json($content, 201);

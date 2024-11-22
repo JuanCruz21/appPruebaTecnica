@@ -22,17 +22,24 @@ export const indexContent = async () => {
     }
 }
 
-export const postContent = async (content:Content) => {
+export const postContent = async (title:string,description:string,urldata:any,category_id:number) => {
     try{
-        const response = await Api.post('/v1/content',content);
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("category_id", category_id.toString());
+        formData.append("urldata", urldata);
+        
+        const response = await Api.post('/v1/content',formData);
         const data =  response.data;
+        console.log(data);
         if (response.status !== 200) {
+            console.error(data.message);
             throw new Error(data.message);
         }
         return returnContent(data);
     } catch (error) {
-        console.error(error);
-        throw error;
+        console.error(error.response.data.message);
     }
 }
 

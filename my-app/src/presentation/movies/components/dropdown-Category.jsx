@@ -4,7 +4,7 @@ import { indexCategory } from "../../../../core/content/actions/category-actions
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 
-export const DropdownCategory = () => {
+export const DropdownCategory = ({onSelect}) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [data, setData] = useState([]);
@@ -39,6 +39,9 @@ export const DropdownCategory = () => {
         onChange={(item) => {
           setValue(item.value);
           setIsFocus(false);
+          if (onSelect) {
+            onSelect(item.value); // Llamar a la función del padre
+          }
         }}
         renderLeftIcon={() => (
           <Ionicons

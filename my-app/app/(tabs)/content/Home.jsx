@@ -27,10 +27,12 @@ export default function Home() {
         {content.map((element, index) => (
           <Link key={index} href={{pathname:'/content/[detail]', params:{id:element.id}}}>
             <View key={index}  style={styles.itemContainer}>
-              <Image
-                source={{ uri: 'http://127.0.0.1:8000' + element.urldata }}
-                style={{ width: '90%', height: 250, resizeMode: 'cover', alignSelf: 'center', borderRadius:20 }}
-              />
+                <Image
+                  source={{ uri: element.urldata.startsWith('http') 
+                    ? element.urldata  // Si ya tiene 'http', no lo agregues
+                    : 'http://127.0.0.1:8000' + element.urldata }}
+                  style={{ width: '90%', height: 250, resizeMode: 'cover', alignSelf: 'center', borderRadius:20 }}
+                />
               <Text style={styles.title}>{element.title}</Text>
               <Text style={styles.subtitle}>{element.description}</Text>
             </View>
@@ -49,7 +51,6 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
   },
   itemContainer: {
