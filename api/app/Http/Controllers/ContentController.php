@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreContentRequest;
 use App\Http\Requests\UpdateContentRequest;
 use App\Models\Content;
-
+use Illuminate\Support\Facades\Storage;
 class ContentController extends Controller
 {
     /**
@@ -31,18 +31,22 @@ class ContentController extends Controller
     public function store(StoreContentRequest $request)
     {
         $filePath = null;
-        if ($request->hasFile('urldata')) {
+        // dd($request->hasFile('urldata'));
+        if ($request->hasAny('urldata')) {
             $file = $request->file('urldata');
             $filePath = $file->store('uploads', 'public');
+            $filePath = Storage::url($filePath);
         }
-        if ($filePath !== null) {
-            $content = Content::create($request->validated() + [
-                'user_id' => auth()->id(),
-                'urldata' => $filePath ?? 'No has subido imagen',
-            ]);
-            return response()->json($content, 201);
-        }
-        return response()->json(['message' => 'File upload failed'], 500);
+
+        $content = Content::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'category_id' => $request->input('category_id'),
+            'user_id' => auth()->id(),
+            'urldata' => $filePath,
+        ]);
+
+        return response()->json($content, 201);
     }
 
     /**

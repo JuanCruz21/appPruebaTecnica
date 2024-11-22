@@ -1,9 +1,8 @@
 import { View,Text,StyleSheet,TouchableOpacity,TextInput } from "react-native";
 import FilePicker from "../../src/presentation/movies/components/file-picker";
 import {useState} from 'react'
-import { Stack } from "expo-router";
-import { Dropdown } from 'react-native-element-dropdown';
 import DropdownCategory from "../../src/presentation/movies/components/dropdown-Category";
+
 export default function CreateContent(){
     const [title,setTitle] = useState('')
     const [description,setDescription] = useState('')
@@ -12,7 +11,6 @@ export default function CreateContent(){
     }
     return(
         <View style={styles.container}>
-            <Stack.Screen options={{title:'Crear Contenido'}}/>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Titulo</Text>
               <TextInput

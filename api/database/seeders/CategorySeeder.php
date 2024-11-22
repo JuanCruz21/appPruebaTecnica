@@ -14,7 +14,7 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::factory()->create([
-            'name' => 'Archivos',
+            'name' => 'Videos',
             'description' => 'Description for Category 1',
         ]);
 

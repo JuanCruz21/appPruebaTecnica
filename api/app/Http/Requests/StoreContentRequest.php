@@ -24,6 +24,8 @@ class StoreContentRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            // 'urldata' => 'required|file|mimes:jpg,png,webp,mp4,mov,ogg,qt,avi,wmv,flv,swf,mkv,avchd,webm|max:51200',
         ];
     }
 }

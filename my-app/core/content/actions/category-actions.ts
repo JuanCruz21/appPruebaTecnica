@@ -1,4 +1,4 @@
-import { Api } from '../../auth/api/api';
+import { Api } from '../../api/api';
 import {Category} from '../interfaces/category';
 
 

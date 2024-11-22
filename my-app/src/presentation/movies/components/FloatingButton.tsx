@@ -6,10 +6,7 @@ interface FloatingButtonProps {
     icon?: string;
     backgroundColor?: string;
     size?: number;
-    bottom?: number;
-    right?: number;
-    top?: number;
-    left?: number;
+    style?: any;
 }
 
 export default function FloatingButton({
@@ -17,33 +14,27 @@ export default function FloatingButton({
     icon = "+",
     backgroundColor = "#2e6ddf",
     size = 56,
-    bottom = 20,
-    right = 0,
-    top= 600,
+    style = {}
 }: FloatingButtonProps) {
     const dynamicStyles = StyleSheet.create ({
         button: {
             height: size,
             width: size,
             borderRadius: size / 2,
-            bottom: bottom,
-            right:right,
-            top: top,
             backgroundColor: backgroundColor,
-            position: "absolute", // Esto posiciona el botón de forma flotante
-            justifyContent: "center", // Centra el contenido dentro del botón
-            alignItems: "center"     // Centra el contenido dentro del botón
+            ...style,
         },
         icon: {
-            color: "white",          // Color del ícono o texto
-            fontSize: size / 2       // Tamaño relativo al tamaño del botón
+            color: "white",
+            fontSize: size / 2 * 1.2,
+            fontWeight: "bold"
         }
 })
 
     return (
         <View style={styles.container}>
             <TouchableOpacity
-                style={{...dynamicStyles.button,elevation: 5}}
+                style={{...dynamicStyles.button, elevation: 5}}
                 onPress={onTap}
             >
                 <Text style={dynamicStyles.icon}>{icon}</Text>

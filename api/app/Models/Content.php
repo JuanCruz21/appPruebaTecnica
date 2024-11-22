@@ -9,10 +9,12 @@ class Content extends Model
 {
     /** @use HasFactory<\Database\Factories\ContentFactory> */
     use HasFactory;
+
     protected $fillable = [
         'title',
         'content',
-        'image',
+        'urldata',
+        'description',
         'category_id',
         'user_id',
     ];

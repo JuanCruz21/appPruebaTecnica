@@ -1,4 +1,4 @@
-import { Api } from '../api/api';
+import { Api } from '../../api/api';
 import {User} from '../interface/User';
 import { AuthUser } from '../interface/AuthUser';
 
