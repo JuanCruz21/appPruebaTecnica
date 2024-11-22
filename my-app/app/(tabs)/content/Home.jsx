@@ -1,30 +1,62 @@
-import { Text, View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, Image,RefreshControl, TouchableOpacity } from 'react-native';
 import FloatingButton from '../../../src/presentation/movies/components/FloatingButton';
 import { router, Link } from 'expo-router';
 import DropdownCategory from '../../../src/presentation/movies/components/dropdown-Category';
-import { indexContent } from '../../../core/content/actions/content-actions';
+import { indexContent, deleteContent } from '../../../core/content/actions/content-actions';
 import { useEffect, useState } from 'react';
+import {Ionicons} from '@expo/vector-icons';
 
 export default function Home() {
   const [content, setContent] = useState([]);
-  const getContent = async () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const [category_id, setCategory] = useState(null); 
+
+  const getContent = async (category_id) => {
     try {
-      const response = await indexContent();
+      const response = await indexContent(category_id);
       setContent(response);
     } catch (error) {
       console.error('Error fetching content:', error);
     }
   };
 
+  const handleCategory = (categoryId) => {
+    setCategory(categoryId);
+  }
+
   useEffect(() => {
     getContent();
   }, []);
 
+  useEffect(() => {
+    getContent(category_id);
+    console.log('categoria ', category_id)
+  }, [category_id]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getContent();
+    setRefreshing(false);
+  };
+
+  const deleteCont = async (id) => {
+    try {
+      const resp = await deleteContent(id);
+      await getContent();
+      console.log(resp)
+    } catch (error) {
+      console.error('Error deleting content:', error);
+    }
+  };
   return (
     <>
-      <DropdownCategory />
-      <ScrollView style={styles.container}>
+      <DropdownCategory onSelect={handleCategory}/>
+      <ScrollView style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
         {content.map((element, index) => (
+          <View style={styles.itemContainer} key={index}>
           <Link key={index} href={{pathname:'/content/[detail]', params:{id:element.id}}}>
             <View key={index}  style={styles.itemContainer}>
                 <Image
@@ -34,9 +66,22 @@ export default function Home() {
                   style={{ width: '90%', height: 250, resizeMode: 'cover', alignSelf: 'center', borderRadius:20 }}
                 />
               <Text style={styles.title}>{element.title}</Text>
-              <Text style={styles.subtitle}>{element.description}</Text>
+              <Text style={styles.subtitle}>{element.description}</Text> 
             </View>
           </Link>
+          <View style={{flexDirection:'row'}}>
+            <Link key={index+10}
+            style={{backgroundColor:'black', color:'white', padding:20, borderRadius:10, margin:10}} 
+            href={{pathname:'/content/update/[edit]',params:{edit:element.id}}}>
+                  Editar contenido {element.title}
+            </Link>
+            <TouchableOpacity 
+              style={{backgroundColor:'red', color:'black', padding:20, borderRadius:10, margin:10,fontWeight:'bold'}}
+              onPress={()=>deleteCont(element.id)}>
+                  <Ionicons name="trash-outline" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          </View>
         ))}
       </ScrollView>
       <FloatingButton
@@ -56,7 +101,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: '100%',
     margin: 20,
-    padding: 30,
+    padding: 20,
     borderRadius: 20,
     borderColor: '#000',
     backgroundColor: '#f0f0f0',

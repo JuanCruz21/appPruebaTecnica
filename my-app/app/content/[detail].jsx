@@ -100,7 +100,7 @@ export default function Detail() {
       ):fileType === 'mp4' || fileType === 'mov' ? (
       <View style={style.contentContainer}>
               <VideoView style={style.video} player={player} allowsFullscreen allowsPictureInPicture />
-              {/* <View style={style.controlsContainer}>
+              <View style={style.controlsContainer}>
                 <Button
                   title={isPlaying ? 'Pause' : 'Play'}
                   onPress={() => {
@@ -111,16 +111,16 @@ export default function Detail() {
                     }
                   }}
                 />
-              </View> */}
+              </View>
             </View>
       ): (
         <Text style={style.unsupported}>Unsupported file type</Text>
       )}
-      {downloadProgress === NaN ? null
-      :<Text style={style.percentage}>
+      {isNaN(downloadProgress) ?null:
+      <Text style={style.percentage}>
         {Math.round(downloadProgress * 100)}%
       </Text>}
-      <Text style={style.description}>{data?.description}</Text>\
+      <Text style={style.description}>{data?.description}</Text>
       <TouchableOpacity style={style.TouchableOpacity} onPress={dowloadDocument}>
         <Text style={style.Text}>Descargar archivo</Text>
         <Ionicons name="cloud-download" size={24} color="white" />
@@ -164,7 +164,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 20,
   },
   video: {
-    width: 400,
+    width: '400',
     height: 275,
   },
   controlsContainer: {
@@ -191,4 +191,10 @@ const style = StyleSheet.create({
     margin: 20,
     color: 'red',
   },
-  });
+  percentage: {
+    textAlign: 'center',
+    fontSize: 18,
+    margin: 20,
+    color: 'green',
+  },
+});

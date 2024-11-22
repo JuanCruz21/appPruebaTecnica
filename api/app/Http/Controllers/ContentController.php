@@ -6,14 +6,22 @@ use App\Http\Requests\StoreContentRequest;
 use App\Http\Requests\UpdateContentRequest;
 use App\Models\Content;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 class ContentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $contents = Content::where('user_id', auth()->id())->get();
+        $contents = Content::where('user_id', auth()->id())
+            ->when($request->has('category_id'), function ($query) use ($request) {
+                $query->where('category_id', $request->category_id);
+            })
+            ->orderBy('created_at', 'DESC') // Ordenar por los más recientes primero
+            ->get()
+            ->toArray();
+
         return response()->json($contents);
     }
 

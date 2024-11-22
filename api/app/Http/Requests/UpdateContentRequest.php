@@ -11,7 +11,7 @@ class UpdateContentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class UpdateContentRequest extends FormRequest
     public function rules(): array
     {
         return [
-
+            'title' => 'string|max:255',
+            'description' => 'string',
+            'category_id' => 'exists:categories,id',
         ];
     }
 }

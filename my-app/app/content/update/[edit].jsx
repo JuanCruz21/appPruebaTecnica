@@ -1,21 +1,39 @@
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
-import FilePicker from "../../src/presentation/movies/components/file-picker";
-import { useState } from "react";
-import DropdownCategory from "../../src/presentation/movies/components/dropdown-Category";
+import FilePicker from "../../../src/presentation/movies/components/file-picker";
+import { useEffect, useState } from "react";
+import DropdownCategory from "../../../src/presentation/movies/components/dropdown-Category";
 import ToastManager, { Toast } from "toastify-react-native";
 import { useRouter } from "expo-router";
-import { postContent } from "../../core/content/actions/content-actions";
+import { postContent, showContent } from "../../../core/content/actions/content-actions";
+import { useLocalSearchParams } from 'expo-router';
 
 export default function CreateContent() {
+    const { edit } = useLocalSearchParams();
   const route = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [urldata, setUrlData] = useState(""); // Estado para la URL
+  const [urldata, setUrlData] = useState(null); // Estado para la URL
   const [category_id, setSelectedCategory] = useState(null);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
+
+  useEffect(()=>{
+    cargarContenido();
+  },[])
+
+  const cargarContenido = async () => {
+    try {
+        const response = await showContent(edit);
+        setTitle(response.title);
+        setDescription(response.description);
+        setUrlData(response.urldata);
+        setSelectedCategory(response.category_id);
+    } catch (error) {
+        console.error(error)
+    }
+  }
 
   const nuevoContenido = async () => {
     try {
@@ -24,14 +42,19 @@ export default function CreateContent() {
         return;
       }
       const response = await postContent(title, description, urldata, category_id);
+      if (response.status === 200) {
         Toast.success("Contenido creado exitosamente");
-        route.push("/");
+        route.push("/(tabs)/home");
+      } else {
+        Toast.error("Error al crear el contenido");
+      }
     } catch (error) {
-      console.error("Error al crear el contenido:", error);
+      console.error(error)
     }
   };
 
   const handleblobSelect = (blob) => {
+    console.log('ingreso acá');
     if (blob instanceof Blob) {
         console.log('Es un Blob');
     }
@@ -39,6 +62,7 @@ export default function CreateContent() {
     if (blob instanceof File) {
         console.log('Es un File');
     }
+    console.log('ingreso',blob);
     setUrlData(blob);
   };
   
@@ -75,7 +99,7 @@ export default function CreateContent() {
       <DropdownCategory onSelect={handleCategorySelect} />
       <FilePicker onSelect={handleblobSelect}/>
       <TouchableOpacity style={styles.boton} onPress={nuevoContenido}>
-        <Text style={styles.texto}>Crear Contenido</Text>
+        <Text style={styles.texto}>Editar Contenido</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => route.back()}>
         <Text style={styles.textoback}>Volver</Text>
