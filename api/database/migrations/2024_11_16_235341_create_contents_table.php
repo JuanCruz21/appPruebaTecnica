@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('urldata');
             $table->text('description');
+            $table->boolean('favorite')->default(false);
             $table->foreignIdFor(\App\Models\User::class);
             $table->foreignIdFor(\App\Models\Category::class);
             $table->timestamps();

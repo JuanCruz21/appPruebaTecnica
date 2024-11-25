@@ -8,7 +8,7 @@ export const DropdownCategory = ({onSelect}) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
     getCategory();
   }, []);
@@ -19,7 +19,7 @@ export const DropdownCategory = ({onSelect}) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Dropdown
         style={[styles.dropdown, isFocus && { borderColor: "blue", marginVertical: 10 }]}
         placeholderStyle={styles.placeholderStyle}
@@ -57,8 +57,7 @@ export const DropdownCategory = ({onSelect}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    padding: 16,
+    width: "90%",
   },
   dropdown: {
     height: 50,

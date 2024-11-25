@@ -17,6 +17,7 @@ class Content extends Model
         'description',
         'category_id',
         'user_id',
+        'favorite'
     ];
 
     public function category()

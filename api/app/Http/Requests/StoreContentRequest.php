@@ -25,7 +25,6 @@ class StoreContentRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            // 'urldata' => 'required|file|mimes:jpg,png,webp,mp4,mov,ogg,qt,avi,wmv,flv,swf,mkv,avchd,webm,txt|max:51200' || 'require|string',
         ];
     }
 }

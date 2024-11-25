@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import DropdownCategory from "../../../src/presentation/movies/components/dropdown-Category";
 import ToastManager, { Toast } from "toastify-react-native";
 import { useRouter } from "expo-router";
-import { postContent, showContent } from "../../../core/content/actions/content-actions";
+import { postContent, showContent, updateContent } from "../../../core/content/actions/content-actions";
 import { useLocalSearchParams } from 'expo-router';
+import {Ionicons} from "@expo/vector-icons";
 
 export default function CreateContent() {
     const { edit } = useLocalSearchParams();
@@ -14,6 +15,7 @@ export default function CreateContent() {
   const [description, setDescription] = useState("");
   const [urldata, setUrlData] = useState(null); // Estado para la URL
   const [category_id, setSelectedCategory] = useState(null);
+  const [favorite, setFavorite] = useState(false);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
@@ -30,6 +32,7 @@ export default function CreateContent() {
         setDescription(response.description);
         setUrlData(response.urldata);
         setSelectedCategory(response.category_id);
+        setFavorite(response.favorite)
     } catch (error) {
         console.error(error)
     }
@@ -41,13 +44,12 @@ export default function CreateContent() {
         Toast.error("Todos los campos son obligatorios");
         return;
       }
-      const response = await postContent(title, description, urldata, category_id);
-      if (response.status === 200) {
-        Toast.success("Contenido creado exitosamente");
-        route.push("/(tabs)/home");
-      } else {
-        Toast.error("Error al crear el contenido");
-      }
+      const favorites = favorite ? 1:0;
+      console.log(favorites)
+      const response = await updateContent(edit,title, description, urldata, category_id,favorites);
+      console.log('response: ',response)
+      Toast.success("Contenido actualizado exitosamente");
+      route.push("/");
     } catch (error) {
       console.error(error)
     }
@@ -64,6 +66,7 @@ export default function CreateContent() {
     }
     console.log('ingreso',blob);
     setUrlData(blob);
+    Toast.success("Archivo seleccionado exitosamente");
   };
   
   return (
@@ -97,6 +100,16 @@ export default function CreateContent() {
         />
       </View>
       <DropdownCategory onSelect={handleCategorySelect} />
+      <TouchableOpacity onPress={()=> setFavorite(!favorite)}>
+        {favorite ? (
+          <View style={styles.row}> 
+            <Ionicons name="star" size={24} color="gold" />
+            <Text>Agregado a favoritos</Text>
+            </View> ): (<View style={styles.row}>
+            <Ionicons name="star-outline" size={24} color="gold" />
+            <Text>Sin agregar a favoritos</Text> 
+          </View> )}
+       </TouchableOpacity>
       <FilePicker onSelect={handleblobSelect}/>
       <TouchableOpacity style={styles.boton} onPress={nuevoContenido}>
         <Text style={styles.texto}>Editar Contenido</Text>
@@ -151,4 +164,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "blue",
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    marginTop: 10,
+  }
 });

@@ -22,9 +22,11 @@ class UpdateContentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'string|max:255',
-            'description' => 'string',
-            'category_id' => 'exists:categories,id',
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'category_id' => 'sometimes|integer|exists:categories,id',
+            'favorite' => 'sometimes|boolean',
+            // 'urldata' => 'sometimes|file|mimes:jpeg,png,jpg,gif,svg,mp4,mov,ogg,qt,avi,wmv,flv,3gp,webm|max:2048',
         ];
     }
 }

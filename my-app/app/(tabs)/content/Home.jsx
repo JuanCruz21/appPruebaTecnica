@@ -10,10 +10,11 @@ export default function Home() {
   const [content, setContent] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [category_id, setCategory] = useState(null); 
+  const [favorite, setFavorite] = useState(false)
 
-  const getContent = async (category_id) => {
+  const getContent = async (category_id,favorite) => {
     try {
-      const response = await indexContent(category_id);
+      const response = await indexContent(category_id,favorite);
       setContent(response);
     } catch (error) {
       console.error('Error fetching content:', error);
@@ -29,13 +30,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    getContent(category_id);
+    getContent(category_id,favorite);
     console.log('categoria ', category_id)
-  }, [category_id]);
+  }, [category_id,favorite]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await getContent();
+    await getContent(category_id,favorite);
     setRefreshing(false);
   };
 
@@ -50,7 +51,17 @@ export default function Home() {
   };
   return (
     <>
+      <View style={styles.row}>
       <DropdownCategory onSelect={handleCategory}/>
+      <TouchableOpacity onPress={()=> setFavorite(!favorite)}>
+        {favorite ? (
+          <View style={styles.row}> 
+            <Ionicons name="star" size={24} color="gold" />
+            </View> ): (<View style={styles.row}>
+            <Ionicons name="star-outline" size={24} color="gold" />
+          </View> )}
+      </TouchableOpacity>
+      </View>
       <ScrollView style={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -126,5 +137,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     right: 10,
     bottom: 10,
+  },
+  row: {
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    flexDirection: 'row',
+    padding: 10,
   },
 });

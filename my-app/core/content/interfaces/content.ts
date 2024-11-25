@@ -5,6 +5,7 @@ export interface Content {
     description: string;
     user_id:     number;
     category_id: number;
+    favorite: number;
     created_at:  Date;
     updated_at:  Date;
 }
