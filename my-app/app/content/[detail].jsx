@@ -34,7 +34,9 @@ export default function Detail() {
     }
   };
   const getFileType = (url) => {
-    return url?.split('.').pop().toLowerCase();
+    const urls = url?.split('.').pop().toLowerCase();
+    console.log('Tipo de archivo:', url);
+    return urls
   };
   const player = useVideoPlayer(videoSource, player => {
     player.loop = false;
@@ -114,7 +116,22 @@ export default function Detail() {
               </View>
             </View>
       ): (
-        <Text style={style.unsupported}>Unsupported file type</Text>
+        <View style={style.contentContainer}>
+          <Text style={style.unsupported}>Unsupported file type</Text>
+              <VideoView style={style.video} player={player} allowsFullscreen allowsPictureInPicture />
+              <View style={style.controlsContainer}>
+                <Button
+                  title={isPlaying ? 'Pause' : 'Play'}
+                  onPress={() => {
+                    if (isPlaying) {
+                      player.pause();
+                    } else {
+                      player.play();
+                    }
+                  }}
+                />
+              </View>
+            </View>
       )}
       {isNaN(downloadProgress) ?null:
       <Text style={style.percentage}>
